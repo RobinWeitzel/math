@@ -1,3 +1,18 @@
+function getSiblings(port) {
+    var siblings = [];
+    for(var connection of port.getConnections().data) {
+        if(port.cssClass === "draw2d_InputPort") {
+            var dest = connection.getSource();
+        } else {
+            var dest = connection.getTarget();
+        }
+
+        siblings.push(dest.getParent());
+    }
+
+    return siblings;
+}
+
 // declare the namespace for this example
 var example = {};
 

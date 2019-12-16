@@ -47,63 +47,14 @@ example.PropertyPane = Class.extend({
 	 */
 	showPropertiesOpAmp : function(figure)
 	{
-        // Set some good defaults
-        // (better you create  new class and set the defaults in the init method)
-        var userData = figure.getUserData();
-        if(userData===null){
-          figure.setUserData(userData={name:""});   
-        }
-        
         // simple x/y coordinate display
         //
-        this.html.append(
-                '<div id="property_position_container" class="panel panel-default">'+
-                ' <div class="panel-heading " >'+
-                '     Position'+
-                '</div>'+
-                ' <div class="panel-body" id="position_panel">'+
-                '   <div class="form-group">'+
-                '       <div class="input-group" ></div> '+
-                '       x <input id="property_position_x" type="text" class="form-control"/><br>'+
-                '       y <input id="property_position_y" type="text" class="form-control"/>'+
-                '   </div>'+
-                ' </div>'+
-                '</div>'+
-                
-                '<div id="property_position_container" class="panel panel-default">'+
-                ' <div class="panel-heading " >'+
-                '     Custom Property'+
-                '</div>'+
-                ' <div class="panel-body" id="userdata_panel">'+
-                '   <div class="form-group">'+
-                '       <div class="input-group" ></div> '+ 
-                '       Value <input id="property_name" type="text" class="form-control" value="'+figure.getUserData().name+'"/>'+
-                '   </div>'+
-                ' </div>'+
-                '</div>');
-        
-    	// Databinding: Figure --> UI
-        //
-        var isInUpdate=false;
-    	figure.on("move",function(){
-    		if(isInUpdate) return;
-    		isInUpdate = true; // avoid recursion
-    		$("#property_position_x").val(figure.getPosition().x);
-       		$("#property_position_y").val(figure.getPosition().y);
-       		isInUpdate=false;
-       	});
-    	
+        this.html.append(figure.getPropertyPane());
+		
+		const html = this.html;
     	// Databinding: UI --> Figure
-        //
-    	$("#position_panel input").on("change", function(){
-    	    // with undo/redo support
-    	    var cmd = new draw2d.command.CommandMove(figure);
-    	    cmd.setPosition(parseInt($("#property_position_x").val()),parseInt($("#property_position_y").val()));
-    	    figure.getCanvas().getCommandStack().execute(cmd);
-    	});
-    	$("#property_name").on("change", function(){
-    		figure.getUserData().name=$("#property_name").val();
-    	});
-
+		//
+		
+		figure.applyListeners(figure, html);
 	}
 });
